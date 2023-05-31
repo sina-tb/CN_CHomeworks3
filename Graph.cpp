@@ -20,7 +20,7 @@ vector<string> splitByDelim(string text, char delimiter)
 Graph::Graph(string topology) 
 {
     vector<string> words = splitByDelim(topology, ' ');
-    for (string iword : words)
+    for(string iword : words)
     {
         vector<string> edge = splitByDelim(iword, '-');
 
@@ -82,7 +82,7 @@ void Graph::show()
         cout << inode._id <<" | ";
         for(Node jnode : nodes)
         {
-            // print edges jnode.print();
+            jnode.print();
         }
     }
 }
@@ -96,7 +96,7 @@ void Graph::delete_edge(int node1, int node2)
     {
         for(auto iedge = index1->_edges.begin();
             iedge != index2->_edges.end();
-             /*NOTHING*/)
+            /*NOTHING*/)
         {
             if((*iedge)._node2 == node2)
             {
@@ -150,11 +150,12 @@ void Graph::modify_edge(int node1, int node2, int weight)
 
         if (edge2 == false && edge1 == false)
         {
-            //add edge
+            index1->addEdge(node1, node2, weight);
+            index2->addEdge(node1, node2, weight);
         }
         else
         {
-            // something is wrong
+            cout << "something is wrong" << endl;
         }
     }
     

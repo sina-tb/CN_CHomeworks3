@@ -12,8 +12,12 @@ public:
 
     int _id;
     std::vector<Edge> _edges;
-
+    
     Node(int d, std::vector<Edge> ed);
+
+    void print();
+    void addEdge(Edge newEdge);
+    void addEdge(int node1, int node2, int weight);
 };
 
 #endif
