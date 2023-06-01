@@ -7,7 +7,7 @@ Node::Node(int d, std::vector<Edge> ed)
     , _edges(ed)
     {   }
 
-void Node::print()
+void Node::printEdges()
 {
     std::cout << _id << " ";
     for(Edge iedge : _edges)

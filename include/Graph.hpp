@@ -18,7 +18,11 @@ public:
 
     vector<Node> nodes;
 
-    Graph(string topology);
+    static vector<string> extract_topology();
+    static bool tp_valid(vector<string> &topology);
+    static bool tp_format_checker(const vector<string> tp_form);
+
+    Graph(vector<string> topology);
     void add_edge(Edge first, Edge second);
     void add_node(int n1, Edge ed);
     void show();

@@ -3,6 +3,17 @@
 
 #include "./include/Graph.hpp"
 
+// Default Command and Notifiacation Strings
+const string TOPOLGY = "topology";
+const string TOPGY_MSG = "Enter your topology\n";
+const string TOPGY_ERR = "Please provide a correct topology\n";
+const string SAME_NODE = "Source and Destination nodes can not be the same\n";
+const string NEG_EDGE = "Edges must be positive integers\n";
+
+// Default Delimiters
+const char IN_DEL = ' ';
+const char TP_DEL = '-';
+
 
 vector<string> splitByDelim(string text, char delimiter)
 {
@@ -17,33 +28,94 @@ vector<string> splitByDelim(string text, char delimiter)
     return words;
 }
 
-Graph::Graph(string topology) 
+bool Graph::tp_format_checker(const vector<string> tp_form)
 {
-    vector<string> words = splitByDelim(topology, ' ');
-    for(string iword : words)
+    if(tp_form.size() != 3)
     {
-        vector<string> edge = splitByDelim(iword, '-');
+        cout << TOPGY_ERR;
+        return false;
+    }
+    else if(tp_form[0] == tp_form[1])
+    {
+        cout << SAME_NODE;
+        return false;
+    }
+    else if(std::stoi(tp_form[2]) <= 0)
+    {
+        cout << NEG_EDGE;
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
 
-        int n1 = stoi(edge[0]);
-        int n2 = stoi(edge[1]);
-        int w = stoi(edge[2]);
+bool Graph::tp_valid(vector<string> &topology)
+{
+    if(topology.size() < 2 || topology[0] != TOPOLGY)
+    {
+        cout << TOPGY_ERR;
+        return false;
+    }
+    // erasing the word topology
+    topology.erase(topology.begin());
+    for(string iinput : topology)
+    {
+        vector<string> tp_form = splitByDelim(iinput, TP_DEL);
+        if(!tp_format_checker(tp_form))
+        {
+            return false;
+        }
+    }
+    return true;
+}
 
+vector<string> Graph::extract_topology()
+{
+    vector<string> topology;
+    do
+    {
+        cout << TOPGY_MSG;
+        string topologyStr;
+        std::getline(std::cin, topologyStr);
+        topology = splitByDelim(topologyStr, IN_DEL);
+    } while (!tp_valid(topology));
+    return topology;
+}
+
+Graph::Graph(vector<string> topology) 
+{
+    for(string tp : topology)
+    {
+        vector<string> tp_holder = splitByDelim(tp, TP_DEL);
+        int n1 = stoi(tp_holder[0]);
+        int n2 = stoi(tp_holder[1]);
+        int w = stoi(tp_holder[2]);
+        
         Edge edge1(n1, n2, w);
         Edge edge2(n2, n1, w);
 
-        Node* index1 = get_node(n1);
-        Node* index2 = get_node(n2);
-        
-        if (index1 == nullptr)
-            add_node(n1, edge1);
-        else
-            index1->_edges.push_back(edge1);
-        if ( index2 == nullptr)
-            add_node(n2, edge2);
-        else
-            index2->_edges.push_back(edge2);
-    }
+        Node* node1 = get_node(n1);
+        Node* node2 = get_node(n2);
 
+        if(node1 == nullptr)
+        {
+            add_node(n1, edge1);
+        }
+        else
+        {
+            node1->addEdge(edge1);
+        }
+        if(node2 == nullptr)
+        {
+            add_node(n2, edge2);
+        }
+        else
+        {
+            node2->addEdge(edge2);
+        }
+    }
 }
 
 Node* Graph::get_node(int id)
@@ -80,10 +152,7 @@ void Graph::show()
     for(Node inode : nodes)
     {
         cout << inode._id <<" | ";
-        for(Node jnode : nodes)
-        {
-            jnode.print();
-        }
+        inode.printEdges();
     }
 }
 

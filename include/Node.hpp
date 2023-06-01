@@ -15,7 +15,7 @@ public:
     
     Node(int d, std::vector<Edge> ed);
 
-    void print();
+    void printEdges();
     void addEdge(Edge newEdge);
     void addEdge(int node1, int node2, int weight);
 };
