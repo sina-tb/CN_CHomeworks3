@@ -16,15 +16,17 @@ class Graph
 
 public:
 
-    vector<Node> nodes;
+    vector<Node*> _nodes;
 
     static vector<string> extract_topology();
     static bool tp_valid(vector<string> &topology);
     static bool tp_format_checker(const vector<string> tp_form);
 
     Graph(vector<string> topology);
+    ~Graph();
+
     void add_edge(Edge first, Edge second);
-    void add_node(int n1, Edge ed);
+    Node* add_node(int n1);
     void show();
     void delete_edge(int node1, int node2);
     void modify_edge(int node1, int node2, int weight);

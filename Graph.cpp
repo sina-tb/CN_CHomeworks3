@@ -92,67 +92,63 @@ Graph::Graph(vector<string> topology)
         int n1 = stoi(tp_holder[0]);
         int n2 = stoi(tp_holder[1]);
         int w = stoi(tp_holder[2]);
-        
-        Edge edge1(n1, n2, w);
-        Edge edge2(n2, n1, w);
 
         Node* node1 = get_node(n1);
         Node* node2 = get_node(n2);
 
         if(node1 == nullptr)
         {
-            add_node(n1, edge1);
+            add_node(n1)->addEdge(n1, n2, w);
         }
         else
         {
-            node1->addEdge(edge1);
+            node1->addEdge(n1, n2, w);
         }
         if(node2 == nullptr)
         {
-            add_node(n2, edge2);
+            add_node(n2)->addEdge(n1, n2, w);
         }
         else
         {
-            node2->addEdge(edge2);
+            node2->addEdge(n2, n1, w);
         }
     }
 }
 
 Node* Graph::get_node(int id)
 {
-    for(auto inode = nodes.begin();
-        inode != nodes.end();
+    for(auto inode = _nodes.begin();
+        inode != _nodes.end();
         inode++)
     {
-        if((*inode)._id == id)
+        if((*inode)->_id == id)
         {
-            return &(*inode);
+            return (*inode);
         }
     }
     return nullptr;
 }
 
-void Graph::add_node(int id , Edge edge)
+Node* Graph::add_node(int id)
 {
-    vector<Edge> ed;
-    Node node(id, ed);
-    node._edges.push_back(edge);
-    nodes.push_back(node);
+    Node* newNode = new Node(id);
+    _nodes.push_back(newNode);
+    return newNode;
 }
 
 void Graph::show()
 {
     cout << "  | ";
-    for(Node inode : nodes)
+    for(Node* inode : _nodes)
     {
-        cout << inode._id << " ";
+        cout << inode->_id << " ";
     }
     cout << endl;
     cout << "---------------------------------------------- " <<endl;
-    for(Node inode : nodes)
+    for(Node* inode : _nodes)
     {
-        cout << inode._id <<" | ";
-        inode.printEdges();
+        cout << inode->_id <<" | ";
+        inode->printEdges();
     }
 }
 
@@ -167,7 +163,7 @@ void Graph::delete_edge(int node1, int node2)
             iedge != index2->_edges.end();
             /*NOTHING*/)
         {
-            if((*iedge)._node2 == node2)
+            if((*iedge)->_node2 == node2)
             {
                 index1->_edges.erase(iedge);
                 break;
@@ -179,7 +175,7 @@ void Graph::delete_edge(int node1, int node2)
             iedge != index2->_edges.end();
             /*NOTHING*/)
         {
-            if((*iedge)._node2 == node2)
+            if((*iedge)->_node2 == node2)
             {
                 index1->_edges.erase(iedge);
                 break;
@@ -199,20 +195,20 @@ void Graph::modify_edge(int node1, int node2, int weight)
 
     if (index1 != nullptr && index2 != nullptr)
     {
-        for(Edge iedge : index1->_edges)
+        for(Edge* iedge : index1->_edges)
         {
-            if(iedge._node2 == node2)
+            if(iedge->_node2 == node2)
             {
-                iedge._weight = weight;
+                iedge->_weight = weight;
                 edge1 = true;
             }
         }
 
-        for(Edge iedge : index2->_edges)
+        for(Edge* iedge : index2->_edges)
         {
-            if(iedge._node1 == node1)
+            if(iedge->_node1 == node1)
             {
-                iedge._weight = weight;
+                iedge->_weight = weight;
                 edge2 = true;
             }
         }
@@ -220,7 +216,7 @@ void Graph::modify_edge(int node1, int node2, int weight)
         if (edge2 == false && edge1 == false)
         {
             index1->addEdge(node1, node2, weight);
-            index2->addEdge(node1, node2, weight);
+            index2->addEdge(node2, node1, weight);
         }
         else
         {
@@ -228,4 +224,14 @@ void Graph::modify_edge(int node1, int node2, int weight)
         }
     }
     
+}
+
+Graph::~Graph()
+{
+    // for(auto node_it = _nodes.begin();
+    //     node_it != _nodes.end();
+    //     node_it++)
+    // {
+    //     delete (*node_it);
+    // }
 }
