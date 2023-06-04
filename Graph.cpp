@@ -1,7 +1,10 @@
 #include <iostream>
 #include <sstream>
+#include <chrono>
 
 #include "./include/Graph.hpp"
+
+const int INF = 1e9;
 
 // Default Command and Notifiacation Strings
 const string TOPOLGY = "topology";
@@ -234,4 +237,88 @@ Graph::~Graph()
     // {
     //     delete (*node_it);
     // }
+}
+
+int getDigitCount(int x)
+{
+    if (x == 0)
+        return 1;
+    int res = 0;
+    while (x)
+    {
+        x /= 10;
+        res++;
+    }
+    return res;
+}
+
+void Graph::distance_vector(int source)
+{
+    auto start = std::chrono::steady_clock::now(); 
+
+    int n = _nodes.size();
+    vector<bool> mark(n + 1, false);
+    vector<int> dist(n + 1, INF);
+    vector<int> par(n + 1, -1);
+
+    dist[source] = 0;
+
+    while (1)
+    {
+        bool updated = false;
+        for (int i = 0; i < _nodes.size(); i++)
+        {
+            for (int j = 0; j < _nodes[i]->_edges.size(); j++)
+            {
+                int v = _nodes[i]->_edges[j]->_node1, u = _nodes[i]->_edges[j]->_node2, w = _nodes[i]->_edges[j]->_weight;
+                if (dist[v] + w < dist[u])
+                {
+                    dist[u] = dist[v] + w;
+                    par[u] = v;
+                    updated = true;
+                }
+            }
+        }
+        if (!updated)
+            break;
+    }
+
+
+    string path;
+    int prev_p;
+    cout<<"\nDest         NextHop         Dist         Shortest Path"<<endl;
+    cout<<"---------------------------------------------------------"<<endl;
+    for (auto node: _nodes)
+    {
+        path="";
+        if (node->_id == source)
+            continue;
+        cout <<  node->_id ;
+        int col = 15 - getDigitCount(node->_id);
+        for (int i = 0; i < col; i++)
+            cout << " ";
+        int p = node->_id;
+        while (par[p] != -1)
+        {   
+            path=" -> "+to_string(p)+path;
+            prev_p=p;
+            p = par[p];
+        }
+
+        cout<<prev_p;
+        col= 15 - getDigitCount(prev_p);
+        for (int i = 0; i < col; i++)
+                cout << " ";
+
+        cout<<dist[node->_id];
+        col= 12 - getDigitCount(dist[node->_id]);
+        for (int i = 0; i < col; i++)
+                cout << " ";
+
+        cout << to_string(source) << path << endl;
+    }
+
+    auto finish = std::chrono::steady_clock::now();
+    double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();
+    cout << "Elapsed: " << elapsed_seconds << endl;
 }
