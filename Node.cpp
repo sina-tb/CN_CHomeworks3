@@ -11,17 +11,41 @@ Node::Node(int id)
     : _id(id)
     {   }
 
-void Node::printEdges()
+void Node::printEdges(const std::vector<Node*> nodes)
 {
-    std::cout << _id << " ";
-    for(Edge* iedge : _edges)
+    for(Node* inode : nodes)
     {
-        std::cout << iedge->_weight << " ";
+        if(inode->_id == this->_id)
+        {
+            std:: cout << " 0" << " ";
+            continue;
+        }
+        Edge* connectedEdge = getConEdge(inode);
+        if(connectedEdge == nullptr)
+        {
+            std::cout << -1 << " ";
+        }
+        else
+        {
+            std::cout << connectedEdge->_weight << " ";
+        }
     }
     std::cout << std::endl;
 }
 
- Node Node::addEdge(int node1, int node2, int weight)
+Edge* Node::getConEdge(const Node* checkNode)
+{
+    for(Edge* iedge : _edges)
+    {
+        if(iedge->_node2 == checkNode->_id)
+        {
+            return iedge;
+        }
+    }
+    return nullptr;
+}
+
+Node Node::addEdge(int node1, int node2, int weight)
  {
     Edge* newEdge = new Edge(node1, node2, weight);
     _edges.push_back(newEdge);

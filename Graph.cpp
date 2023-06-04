@@ -106,7 +106,7 @@ Graph::Graph(vector<string> topology)
         }
         if(node2 == nullptr)
         {
-            add_node(n2)->addEdge(n1, n2, w);
+            add_node(n2)->addEdge(n2, n1, w);
         }
         else
         {
@@ -148,7 +148,7 @@ void Graph::show()
     for(Node* inode : _nodes)
     {
         cout << inode->_id <<" | ";
-        inode->printEdges();
+        inode->printEdges(_nodes);
     }
 }
 

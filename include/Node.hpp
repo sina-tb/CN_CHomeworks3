@@ -17,8 +17,9 @@ public:
     Node(int id);
     ~Node();
 
-    void printEdges();
+    void printEdges(const std::vector<Node*> nodes);
     Node addEdge(int node1, int node2, int weight);
+    Edge* getConEdge(const Node* checkNode);
 };
 
 #endif

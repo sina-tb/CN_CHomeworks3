@@ -25,7 +25,6 @@ public:
     Graph(vector<string> topology);
     ~Graph();
 
-    void add_edge(Edge first, Edge second);
     Node* add_node(int n1);
     void show();
     void delete_edge(int node1, int node2);
