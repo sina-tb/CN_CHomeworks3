@@ -71,3 +71,17 @@ void Customer::printCustomerProviders()
         cout << "~~~~~~~~~~~~\n";
     }
 }
+
+void Customer::addProviderLengthPref(Provider* prv,
+    string length, string pref)
+{
+    try
+    {
+        _prvLengthPref[prv->ASID] = 
+            pair<int, int>(stoi(length), stoi(pref));
+    }
+    catch(...)
+    {
+        cout << "lenght and pref must be integers" << endl;
+    }
+}

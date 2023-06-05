@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-
+#include <map>
 
 class Provider;
 
@@ -15,6 +15,7 @@ protected:
 
     vector<Provider*> _providers;
     string ASID;
+    std::map<string, pair<int, int> > _prvLengthPref;
 
 public:
 
@@ -26,6 +27,8 @@ public:
     bool providerExists(Provider* prv);
     string getASID();
     void printCustomerProviders();
+    void addProviderLengthPref(Provider* prv,
+        string lenght, string pref);
 
 };
 

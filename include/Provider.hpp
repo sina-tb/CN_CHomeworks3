@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 class Customer;
 
@@ -18,6 +19,8 @@ private:
 
     vector<Customer*> _customers;
     vector<Provider*> _peers;
+    std::map<string, pair<int, int> > _cstmLengthPref; 
+    std::map<string, pair<int, int> > _peerLengthPref;
 
 public:
 
@@ -27,7 +30,14 @@ public:
     ~Provider();
     Customer* addCustomer(Customer* customer);
     bool customerExists(Customer* customer);
+    bool peerExists(Provider* provider);
     void printSubscribers();
+    void printPeers();
+    void addCustomerLengthPref(Customer* customer,
+        string length, string pref);
+    void addPeerLenghtPref(Provider* prv,
+        string length, string pref);
+    Provider* addPeer(Provider* peerPrv);
 
 };
 

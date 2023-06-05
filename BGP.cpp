@@ -19,7 +19,8 @@ const string BGP_MNU =
 7) Show list of all Customers\n\
 8) Show list of Subscribers for a Provider\n\
 9) Show list of Providers for a Customer\n\
-10) End the simulation\n";
+10) Show list of peers for a provider\n\
+11) End the simulation\n";
 
 const string BGP_ENDED = "Simulation has been Finished\n";
 const string TXT_DEL = "~~~~~~~~~~~~\n";
@@ -37,15 +38,24 @@ const string HLP_ADD_PRV = HLP + "<ASID> and then press enter\n";
 const string HLP_ADD_CUSTMR = HLP + "<ASID> and then press enter\n";
 const string HLP_ASGN_PRV_CUSTMR = HLP + 
 "Provider: <Provider's ASID> and then press enter\n\
-Customer: <Customer's ASID> and then press enter\n";
+Customer: <Customer's ASID> and then press enter\n\
+Length: <Length of connection> and then press enter\n\
+Preference: <Connection Priority> (higher better)\n";
 const string HLP_SHW_SUB = HLP + "<Provider's ASID> and then press enter\n";
 const string HLP_CUS_PRV = HLP + "<Customer's ASID> and then press \
 enter.\nAlso note that A Provider can be a customer as well\n";
+const string HLP_ADD_PER = HLP + 
+"Provider1: <First Provider's ASID> and then press enter\n\
+Provider2: <Second Provider's ASID> and then press enter\n\
+Length: <Length of connection> and then press enter\n\
+Preference: <Connection Priority> (higher better)\n";
+const string HLP_SHW_PER = HLP + "<Provider's ASID> and then press enter\n";
 
 // Successful
 const string SUC_ADD_PRV = "Provider has been added successfully!\n";
 const string SUC_ADD_CUS = "Customer has been added successfully!\n";
 const string SUC_ASGN_CUS_PRV = "Customer has been subscribed to provider successfully!\n";
+const string SUC_ADD_PER = "Prvoiders 1 & 2 are now peers!\n";
 
 enum MNU_OPT
 {
@@ -58,7 +68,8 @@ enum MNU_OPT
     SHW_CUS = 7,
     SHW_SUB = 8,
     SHW_CUS_S_PRV = 9,
-    SIM_END = 10,
+    SHW_PEER = 10,
+    SIM_END = 11,
 };
 
 using namespace std;
@@ -102,7 +113,7 @@ void BGP::handleInput(string input)
     }
     else if(input == to_string(ADD_PEER))
     {
-
+        bgpAddPeer();
     }
     else if(input == to_string(ADV))
     {
@@ -123,6 +134,10 @@ void BGP::handleInput(string input)
     else if(input == to_string(SHW_CUS_S_PRV))
     {
         bgpPrintCustomerProviders();
+    }
+    else if(input == to_string(SHW_PEER))
+    {
+        bgpPrintPeers();   
     }
     else
     {
@@ -256,6 +271,12 @@ void BGP::bgpAssignProviderCustomer()
     customer
             ->addProvider(provider)
             ->addCustomer(customer);
+    string pathLength, pathPref;
+    cout << "Length: ";
+    std::getline(std::cin, pathLength);
+    cout << "Preference: ";
+    std::getline(std::cin, pathPref);
+    provider->addCustomerLengthPref(customer, pathLength, pathPref);
     cout << SUC_ASGN_CUS_PRV;
 }
 
@@ -308,11 +329,62 @@ void BGP::bgpPrintCustomerProviders()
     if(cs == nullptr)
     {
         cout << NO_ID_ERR;
+        return;
     }
     else
     {
         cout << "Here's Customer: " <<
             inp << " list of providers\n";
         cs->printCustomerProviders();
+    }
+}
+
+void BGP::bgpAddPeer()
+{
+    cout << HLP_ADD_PER;
+    string prv_1, prv_2;
+    cout << "Provider1: ";
+    std::getline(std::cin, prv_1);
+    Provider* ppr1 = getProviderByID(prv_1);
+    if(ppr1 == nullptr)
+    {
+        cout << NO_PRV_ERR;
+        return;
+    }
+    cout << "Provider2: ";
+    std::getline(std::cin, prv_2);
+    Provider* ppr2 = getProviderByID(prv_2);
+    if(ppr2 == nullptr)
+    {
+        cout << NO_PRV_ERR;
+        return;
+    }
+    ppr1
+        ->addPeer(ppr2)
+        ->addPeer(ppr1);
+    string pathLenght, pathPref;
+    cout << "Length: ";
+    std::getline(std::cin, pathLenght);
+    cout << "Preference: ";
+    std::getline(std::cin, pathPref);
+    ppr1->addPeerLenghtPref(ppr2, pathLenght, pathPref);
+    ppr2->addPeerLenghtPref(ppr1, pathLenght, pathPref);
+    cout << SUC_ADD_PER;
+}
+
+void BGP::bgpPrintPeers()
+{
+    cout << HLP_SHW_PER;
+    string inp;
+    std::getline(std::cin, inp);
+    Provider* prv = getProviderByID(inp);
+    if(prv == nullptr)
+    {
+        cout << NO_PRV_ERR;
+        return;
+    }
+    else
+    {
+        prv->printPeers();
     }
 }
