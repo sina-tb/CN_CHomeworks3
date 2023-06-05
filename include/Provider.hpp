@@ -25,6 +25,9 @@ public:
     Provider(string id);
     Provider(Provider* provider, string id);
     ~Provider();
+    Customer* addCustomer(Customer* customer);
+    bool customerExists(Customer* customer);
+    void printSubscribers();
 
 };
 

@@ -25,6 +25,7 @@ public:
     ~Customer();
     bool providerExists(Provider* prv);
     string getASID();
+    void printCustomerProviders();
 
 };
 

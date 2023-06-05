@@ -4,6 +4,7 @@
 #include <iostream>
 
 const string PRV_ALRDY_EXST = "This provider is already the provider for this customer\n";
+const string NULL_ASGN_C = "Can not assign a null Customer object\n";
 
 Customer::Customer() 
 {   }
@@ -35,6 +36,11 @@ bool Customer::providerExists(Provider* prv)
 
 Provider* Customer::addProvider(Provider* prv)
 {
+    if(prv == nullptr)
+    {
+        cout << NULL_ASGN_C;
+        return nullptr;
+    }
     if(!providerExists(prv))
     {
         _providers.push_back(prv);
@@ -43,11 +49,25 @@ Provider* Customer::addProvider(Provider* prv)
     else
     {
         cout << PRV_ALRDY_EXST;
-        return nullptr;
+        return prv;
     }
 }
 
 string Customer::getASID()
 {
     return ASID;
+}
+
+void Customer::printCustomerProviders()
+{
+    if(_providers.empty())
+    {
+        cout << "There are no providers for this customer!\n";
+        return;
+    }
+    for(Provider* pr : _providers)
+    {
+        cout << pr->ASID << endl;
+        cout << "~~~~~~~~~~~~\n";
+    }
 }
