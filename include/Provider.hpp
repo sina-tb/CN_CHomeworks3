@@ -9,16 +9,17 @@
 
 using namespace std;
 
-class Provider
+class Provider : public Customer
 {
 private:
     vector<Customer*> _customers;
     vector<Provider*> _peers;
-    string prvID;
 
 public:
     Provider();
+    Provider(Provider* provider, string id);
     ~Provider();
+
 };
 
 #endif

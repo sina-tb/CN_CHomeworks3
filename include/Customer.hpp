@@ -2,20 +2,22 @@
 #define _CUSTOMER_HPP_
 
 #include <string>
+#include <vector>
 
 #include "Provider.hpp"
 
 class Customer
 {
-private:
-
-    Provider* _provider;
-    string _customerID;
+protected:
+    vector<Provider*> _providers;
+    string ASID;
 
 public:
-
-    Provider* setProvider(Provider* prv);
+    Provider* addProvider(Provider* prv);
     Customer();
+    Customer(Provider* provider, string id);
+    ~Customer();
+    bool providerExists(Provider* prv);
 
 };
 

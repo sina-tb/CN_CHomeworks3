@@ -12,28 +12,19 @@ const string BGP_MNU =
 2) Add a customer\n\
 3) Assign a customer to a provider\n\
 4) Define a relation between two providers(peer)\n\
-5) Advertise a routing from one AS to another\n";
+5) Advertise a routing from one AS to another\n\
+6) End the simulation\n";
 
 
 class BGP
 {
 private:
-
     vector<Provider*> _providerList;
     vector<Customer*> _customer;
-
 
 public:
     BGP();
     ~BGP();
 };
-
-BGP::BGP()
-{
-}
-
-BGP::~BGP()
-{
-}
 
 #endif
