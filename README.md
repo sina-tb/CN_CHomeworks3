@@ -10,7 +10,7 @@ The code consists of three classes:
   
   ![Screenshot from 2023-06-05 10-56-49](https://github.com/sina-tb/CN_CHomeworks3/assets/88041997/0ab4159b-868b-478a-b55e-dd28cf8aa2e1)
   
-  * **Node**: Shis class has two attributes. Also, this class has some **methods** that can be explained by their name, so the explanation of methods are unnecessary.
+  * **Node**: This class has two attributes. Also, this class has some **methods** that can be explained by their name, so the explanation of methods are unnecessary.
     * Id : Shows the id number of node in graph
     * Edges: A vector of **Edge** objects that their first node is equal to the **Id** of the node. in other word, a vector consist of all edges that are connected to neighbors of the node.
     
@@ -46,10 +46,16 @@ The code consists of three classes:
  ### Remove
  The remove command has been done on the graph shown in **Modify** section:
  
+  ![4](https://github.com/sina-tb/CN_CHomeworks3/assets/88041997/549ccd1e-b34c-4722-b69a-6820e2a85f59)
  ### BGP
  ### LSRP
+ In this section we send information about directly connected links to all nodes (not just neighbors) then we used **Dijkstra's shortest path algorithm** to find the shortest path.It takes n iterations(n is number of nodes).Iteration start at source node and then we use information about directly connected links to this node and find shortest path,then after we confirm a new node(shortest cost),with information of it's directly connected links,we update the paths and find the shortest one again.after n iterastions we got shortest paths from source node. 
  
- ![4](https://github.com/sina-tb/CN_CHomeworks3/assets/88041997/549ccd1e-b34c-4722-b69a-6820e2a85f59)
+The result is shown in picture below:
+
+![Screenshot from 2023-06-05 20-07-14](https://github.com/sina-tb/CN_CHomeworks3/assets/126562944/3a005d60-4450-489d-b5be-7b8c3533555c)
+
+![Screenshot from 2023-06-05 20-07-40](https://github.com/sina-tb/CN_CHomeworks3/assets/126562944/89315a59-df1c-4de1-ab81-c669833479ee)
  
  ### Distance Vector(DVRP)
  The code of this secction is shown below. As you can see, we used **Bellman Ford algorithm** to find distance vector. we iterate over all edges in graph and update their weight and save the    lowest-price from each node to other nodes. If updating doesn't occur for all edges, we stop the algorithm:
@@ -64,38 +70,38 @@ The code consists of three classes:
 ## Comparison
 The Chart shown below is the time of each algorithm for each node in given graph **before** removing **4-10 Edge** (The time is micro-second):
 
-Source | BGP | LSRP | DVRP |
---- | --- | --- | --- |
-1 |  |  | 97.221 |
-2 |  |  | 86.267 |
-3 |  |  | 86.776 |
-4 |  |  | 88.452 |
-5 |  |  | 90.255 |
-6 |  |  | 86.889 |
-7 |  |  | 84.488 |
-8 |  |  | 90.364 |
-9 |  |  | 64.518 |
-10 |  |  | 89.32 |
-11 |  |  | 85.312 |
-12 |  |  | 85.236 |
-13 |  |  | 66.527 |
+Source | LSRP | DVRP |
+--- | --- | --- |
+1 | 508.429 | 97.221 |
+2 | 588.393 | 86.267 |
+3 | 658.618 | 86.776 |
+4 | 557.613 | 88.452 |
+5 | 541.48 | 90.255 |
+6 | 506.863 | 86.889 |
+7 | 514.849 | 84.488 |
+8 | 625.234 | 90.364 |
+9 | 497.395 | 64.518 |
+10 | 762082 | 89.32 |
+11 | 714.658 | 85.312 |
+12 | 558.117 | 85.236 |
+13 | 645.143 | 66.527 |
 
 The Chart shown below is the time of each algorithm for each node in given graph **after** removing **4-10 Edge**  (The time is micro-second):
 
-Source | BGP | LSRP | DVRP |
---- | --- | --- | --- |
-1 |  |  | 229.632 |
-2 |  |  | 215.271 |
-3 |  |  | 213.403 |
-4 |  |  | 226.374 |
-5 |  |  | 216.644 |
-6 |  |  | 214.348 |
-7 |  |  | 206.88 |
-8 |  |  | 217.512 |
-9 |  |  | 210.369 |
-10 |  |  | 226.721 |
-11 |  |  | 226.213 |
-12 |  |  | 211.954 |
-13 |  |  | 214.909 |
+Source | LSRP | DVRP |
+--- | --- | --- |
+1 | 505.976 | 229.632 |
+2 | 493.916 | 215.271 |
+3 | 494.925 | 213.403 |
+4 | 588.712 | 226.374 |
+5 | 471.593 | 216.644 |
+6 | 462.807 | 214.348 |
+7 | 460.787 | 206.88 |
+8 | 481.432 | 217.512 |
+9 | 427.8 | 210.369 |
+10 | 465.016 | 226.721 |
+11 | 510.542 | 226.213 |
+12 | 503.95 | 211.954 |
+13 | 507.221 | 214.909 |
 
  
