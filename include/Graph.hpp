@@ -18,7 +18,7 @@ public:
 
     vector<Node*> _nodes;
 
-    static vector<string> extract_topology(vector<string> topology);
+    static vector<string> extract_topology();
     static bool tp_valid(vector<string> &topology);
     static bool tp_format_checker(const vector<string> tp_form);
 
@@ -31,6 +31,7 @@ public:
     void modify_edge(int node1, int node2, int weight);
     Node* get_node(int id);
     void distance_vector(int source);
+    void link_state(int source);
 };
 
 vector<string> splitByDelim(string text, char delimeter);

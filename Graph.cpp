@@ -8,7 +8,7 @@ const int INF = 1e9;
 
 // Default Command and Notifiacation Strings
 const string TOPOLGY = "topology";
-// const string TOPGY_MSG = "Enter your topology\n";
+const string TOPGY_MSG = "Enter your topology\n";
 const string TOPGY_ERR = "Please provide a correct topology\n";
 const string SAME_NODE = "Source and Destination nodes can not be the same\n";
 const string NEG_EDGE = "Edges must be positive integers\n";
@@ -65,6 +65,13 @@ bool Graph::tp_format_checker(const vector<string> tp_form)
 
 bool Graph::tp_valid(vector<string> &topology)
 {
+    if(topology.size() < 2 || topology[0] != TOPOLGY)
+    {
+        cout << TOPGY_ERR;
+        return false;
+    }
+    // erasing the word topology
+    topology.erase(topology.begin());
     for(string iinput : topology)
     {
         vector<string> tp_form = splitByDelim(iinput, TP_DEL);
@@ -76,17 +83,17 @@ bool Graph::tp_valid(vector<string> &topology)
     return true;
 }
 
-vector<string> Graph::extract_topology(vector<string> topology)
+vector<string> Graph::extract_topology()
 {
-    if(tp_valid(topology))
+    vector<string> topology;
+    do
     {
-        return topology;
-    }
-    else
-    {
-        topology.clear(); // making it empty
-        return topology;
-    }
+        cout << TOPGY_MSG;
+        string topologyStr;
+        std::getline(std::cin, topologyStr);
+        topology = splitByDelim(topologyStr, IN_DEL);
+    } while (!tp_valid(topology));
+    return topology;
 }
 
 Graph::Graph(vector<string> topology) 
@@ -165,7 +172,7 @@ void Graph::delete_edge(int node1, int node2)
     if(index1 != nullptr && index2 != nullptr)
     {
         for(auto iedge = index1->_edges.begin();
-            iedge != index2->_edges.end();
+            iedge != index1->_edges.end();
             /*NOTHING*/)
         {
             if((*iedge)->_node2 == node2)
@@ -180,15 +187,19 @@ void Graph::delete_edge(int node1, int node2)
             iedge != index2->_edges.end();
             /*NOTHING*/)
         {
-            if((*iedge)->_node2 == node2)
+            if((*iedge)->_node2 == node1)
             {
-                index1->_edges.erase(iedge);
+                index2->_edges.erase(iedge);
                 break;
             }
             ++iedge;
         }
+        cout << "OK" << endl;
     }
-    cout << "this edge doesn't exist" << endl;
+    else{
+        cout << "this edge doesn't exist" << endl;
+    }
+    
 }
 
 void Graph::modify_edge(int node1, int node2, int weight)
@@ -211,7 +222,7 @@ void Graph::modify_edge(int node1, int node2, int weight)
 
         for(Edge* iedge : index2->_edges)
         {
-            if(iedge->_node1 == node1)
+            if(iedge->_node2 == node1)
             {
                 iedge->_weight = weight;
                 edge2 = true;
@@ -223,10 +234,11 @@ void Graph::modify_edge(int node1, int node2, int weight)
             index1->addEdge(node1, node2, weight);
             index2->addEdge(node2, node1, weight);
         }
-        else
-        {
-            cout << "something is wrong" << endl;
-        }
+        cout << "OK" << endl;
+    }
+    else
+    {
+        cout << "These Nodes Don't Exist" << endl;
     }
     
 }
@@ -254,12 +266,160 @@ int getDigitCount(int x)
     return res;
 }
 
+
+void Graph::link_state(int source)
+{   
+    auto start = std::chrono::steady_clock::now();
+    int n = _nodes.size();
+    vector<int> M;
+    vector<int> C(n + 1,INF);
+    vector<int> par(n + 1, -1);
+    M.push_back(source);
+    for(auto edge : get_node(source)->_edges)
+    {
+        if(edge->_node1 == source)
+        {
+            C[edge->_node2] = edge->_weight;
+            par[edge->_node2] = source;
+        }
+        else
+        { 
+            C[edge->_node1] = edge->_weight;
+            par[edge->_node1] = source;
+        }
+    }
+    C[source] = 0;
+
+    int iteration = 1;
+    while (M.size() != n)
+    {
+        int min_cost = INF;
+        int index = -1;
+        for(int i = 1; i < n + 1 ; i++)
+        {
+            bool flag = false;
+            for(int j = 0; j < M.size(); j++)
+            {
+                if(i == M[j]) 
+                {
+                    flag = true;
+                }
+            }
+            if(flag)
+            {
+                continue;
+            }
+            if(C[i] < min_cost)
+            {
+                min_cost = C[i];
+                index = i;
+            }
+        }
+        cout << "   |Iter " + to_string(iteration) << ":" << endl;
+        cout << "Dest|";
+        for (auto node: _nodes)
+        {
+            int col = 4 - getDigitCount(node->_id);
+            for (int i = 0; i < col; i++)
+            {
+                cout << " ";
+            }
+            cout << node->_id << "|";
+        }
+        cout << endl;
+        cout << "Cost|";
+        for (auto node: _nodes)
+        {
+            int ind = node->_id;
+            int col = 4 - getDigitCount(C[ind]);
+            if (C[ind] == INF)
+                col = 2;
+            for (int i = 0; i < col; i++)
+            {
+                cout << " ";
+            }
+            cout << (C[ind] == INF ? -1 : C[ind]) << "|";
+        }
+        cout << endl;
+        for (int i = 0; i < (_nodes.size() + 1) * 5; i++)
+            cout << "-";
+        cout << endl;
+        M.push_back(index);
+        iteration++;
+
+        for(int i = 1; i < n + 1 ; i++)
+        {
+            bool flag = false; 
+            for(int j = 0; j < M.size(); j++)
+            {
+                if(i == M[j]) 
+                {
+                    flag = true;
+                }
+            }
+            if(flag)
+                continue;
+            
+            for(auto edge : get_node(index)->_edges)
+            {   
+                if(edge->_node1 == index)
+                {
+                    if(edge->_node2 != i)
+                        continue;
+                }
+                else
+                { 
+                    if(edge->_node1 != i)
+                        continue;
+                }
+                
+                if(C[index] + edge->_weight < C[i])
+                {
+                    C[i] = C[index] + edge->_weight;
+                    par[i] = index;
+                }
+
+            }
+        }
+    }
+    
+    string path;
+    cout<<"\nPath: [s] -> [d]         Min-Cost         Shortest Path"<<endl;
+    cout<<"---------------------------------------------------------"<<endl;
+    for (auto node: _nodes)
+    {
+        int ind = node->_id;
+        path="";
+        if (ind == source)
+            continue;
+        cout << "    [" << source << "] -> [" << ind << "]";
+        int col = 15 - getDigitCount(ind);
+        for (int i = 0; i < col; i++)
+            cout << " ";
+        cout<<C[ind];
+        col= 15 - getDigitCount(C[ind]);
+        for (int i = 0; i < col; i++)
+                cout << " ";
+        int p = ind;
+        while (par[p] != -1)
+        {   
+            path=" -> "+to_string(p)+path;
+            p = par[p];
+        }
+        cout << to_string(source) << path << endl;
+    }
+     
+    auto finish = std::chrono::steady_clock::now();
+    double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();
+    cout << "Elapsed: " << elapsed_seconds << endl;
+    return;
+}
+
 void Graph::distance_vector(int source)
 {
     auto start = std::chrono::steady_clock::now(); 
 
     int n = _nodes.size();
-    vector<bool> mark(n + 1, false);
     vector<int> dist(n + 1, INF);
     vector<int> par(n + 1, -1);
 
