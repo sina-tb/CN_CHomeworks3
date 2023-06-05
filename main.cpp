@@ -29,7 +29,7 @@ int main()
     while(1)
     {
         vector<string> input = getInput();
-        if(input[0] == TOPLGY && input.size() > 1)
+        if(input[0] == TOPLGY && input.size() >= 2)
         {
             input.erase(input.begin());
             topology = Graph::extract_topology(input);
@@ -48,13 +48,13 @@ int main()
                 continue;
             }
         }
-        else if(input[0] == BGP)
+        else if(input[0] == BGP && input.size() == 1)
         {
             std::cout << 
                 "bgp needs to be \
                 implemented" << std::endl;
         }
-        else if(input[0] == END)
+        else if(input[0] == END && input.size() == 1)
         {
             std::cout << END_MSG;
             return 0;
