@@ -48,6 +48,27 @@ The code consists of three classes:
  
   ![4](https://github.com/sina-tb/CN_CHomeworks3/assets/88041997/549ccd1e-b34c-4722-b69a-6820e2a85f59)
  ### BGP
+ At first after entering 2 in the menu and `bgp` after that, user will encounter a *BGP* Menu as follows:
+ ![image](https://github.com/sina-tb/CN_CHomeworks3/assets/98649020/14776344-40e3-4fcf-801d-5ccd609b6ec3)
+ after choosing each option a guide for the chosen command will be printed for the user.
+ Here we will go forward on a few examples:
+ 
+ #### Add Provider/Add Customer
+ after pressing `1` or `2` on the BGP menu, the command guide corresponding to each option will be appeared:
+ ![image](https://github.com/sina-tb/CN_CHomeworks3/assets/98649020/0e5d04ef-e111-48ff-af66-f831f087e579)
+for example in this photo we chose the Add customer option
+the *ASID* corresponds to id of the Autonomous System
+
+#### Advertise routing
+after pressing `5` on the BGP menu, we are able to announce a new routing path.
+the first input would be the AS introducing this route (**note** that for simplicity we introduce `AS`s instead of `prefixes`).
+![image](https://github.com/sina-tb/CN_CHomeworks3/assets/98649020/4614b9b1-26d8-4fc7-92f6-5b1483178dc0)
+The first input indicates the *provider* which is inroducing the path.
+The second input indicates the destination which would use this routing information (More likely another provider)
+The third input indicates the actual prefix(i,e **AS**)
+and the final input as it was described in the hint, the cost/length of the path.
+ 
+
  ### LSRP
  In this section we send information about directly connected links to all nodes (not just neighbors) then we used **Dijkstra's shortest path algorithm** to find the shortest path.It takes n iterations(n is number of nodes).Iteration start at source node and then we use information about directly connected links to this node and find shortest path,then after we confirm a new node(shortest cost),with information of it's directly connected links,we update the paths and find the shortest one again.after n iterastions we got shortest paths from source node. 
  
