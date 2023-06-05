@@ -18,7 +18,7 @@ public:
 
     vector<Node*> _nodes;
 
-    static vector<string> extract_topology();
+    static vector<string> extract_topology(vector<string> topology);
     static bool tp_valid(vector<string> &topology);
     static bool tp_format_checker(const vector<string> tp_form);
 
@@ -34,5 +34,6 @@ public:
 };
 
 vector<string> splitByDelim(string text, char delimeter);
+vector<string> getInput();
 
 #endif

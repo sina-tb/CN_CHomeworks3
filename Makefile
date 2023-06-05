@@ -1,5 +1,5 @@
 CXX := g++ -std=c++11
-CXXFLAGS := -Wextra -Wall -g
+CXXFLAGS := -Wextra -Wall -g -Wno-sign-compare
 OUT := main.out
 INC_PATH := ./include/
 OBJS := Graph.o Node.o Edge.o

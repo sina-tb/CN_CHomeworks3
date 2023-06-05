@@ -8,7 +8,7 @@ const int INF = 1e9;
 
 // Default Command and Notifiacation Strings
 const string TOPOLGY = "topology";
-const string TOPGY_MSG = "Enter your topology\n";
+// const string TOPGY_MSG = "Enter your topology\n";
 const string TOPGY_ERR = "Please provide a correct topology\n";
 const string SAME_NODE = "Source and Destination nodes can not be the same\n";
 const string NEG_EDGE = "Edges must be positive integers\n";
@@ -29,6 +29,15 @@ vector<string> splitByDelim(string text, char delimiter)
         words.push_back(temp);
     }
     return words;
+}
+
+vector<string> getInput()
+{
+    vector<string> input;
+    string inputStr;
+    std::getline(std::cin, inputStr);
+    input = splitByDelim(inputStr, IN_DEL);
+    return input;
 }
 
 bool Graph::tp_format_checker(const vector<string> tp_form)
@@ -56,13 +65,6 @@ bool Graph::tp_format_checker(const vector<string> tp_form)
 
 bool Graph::tp_valid(vector<string> &topology)
 {
-    if(topology.size() < 2 || topology[0] != TOPOLGY)
-    {
-        cout << TOPGY_ERR;
-        return false;
-    }
-    // erasing the word topology
-    topology.erase(topology.begin());
     for(string iinput : topology)
     {
         vector<string> tp_form = splitByDelim(iinput, TP_DEL);
@@ -74,17 +76,17 @@ bool Graph::tp_valid(vector<string> &topology)
     return true;
 }
 
-vector<string> Graph::extract_topology()
+vector<string> Graph::extract_topology(vector<string> topology)
 {
-    vector<string> topology;
-    do
+    if(tp_valid(topology))
     {
-        cout << TOPGY_MSG;
-        string topologyStr;
-        std::getline(std::cin, topologyStr);
-        topology = splitByDelim(topologyStr, IN_DEL);
-    } while (!tp_valid(topology));
-    return topology;
+        return topology;
+    }
+    else
+    {
+        topology.clear(); // making it empty
+        return topology;
+    }
 }
 
 Graph::Graph(vector<string> topology) 
