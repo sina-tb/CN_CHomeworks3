@@ -2,29 +2,27 @@
 #define _BGP_HPP_
 
 #include <vector>
+#include <string>
 
-#include "Customer.hpp"
-#include "Provider.hpp"
+class Provider;
+class Customer;
 
-const string BGP_MNU = 
-"Press one of the following options:\n\
-1) Add a providern\n\
-2) Add a customer\n\
-3) Assign a customer to a provider\n\
-4) Define a relation between two providers(peer)\n\
-5) Advertise a routing from one AS to another\n\
-6) End the simulation\n";
+using namespace std;
 
 
 class BGP
 {
 private:
-    vector<Provider*> _providerList;
-    vector<Customer*> _customer;
+    vector<Provider*> _providerList; // Multihomed/Transit AS
+    vector<Customer*> _customerList; // Stub AS
 
 public:
     BGP();
     ~BGP();
+    void runBGP();
+    void handleInput(string input);
+    void bgpAddProvider();
+    bool isNewIDAddable(string prID);
 };
 
 #endif

@@ -1,11 +1,16 @@
 #include "./include/Customer.hpp"
+#include "./include/Provider.hpp"
 
 #include <iostream>
 
 const string PRV_ALRDY_EXST = "This provider is already the provider for this customer\n";
 
 Customer::Customer() 
-    {   }
+{   }
+
+Customer::Customer(string id)
+    : ASID(id)
+{   }
 
 Customer::Customer(Provider* provider, string id)
     : ASID(id)
@@ -25,6 +30,7 @@ bool Customer::providerExists(Provider* prv)
             return true;
         }
     }
+    return false;
 }
 
 Provider* Customer::addProvider(Provider* prv)
@@ -39,4 +45,9 @@ Provider* Customer::addProvider(Provider* prv)
         cout << PRV_ALRDY_EXST;
         return nullptr;
     }
+}
+
+string Customer::getASID()
+{
+    return ASID;
 }

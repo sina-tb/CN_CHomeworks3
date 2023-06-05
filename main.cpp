@@ -1,13 +1,17 @@
 #include <iostream>
 #include <string>
 
+
 #include "./include/Graph.hpp"
 #include "./include/Node.hpp"
 #include "./include/Edge.hpp"
+#include "./include/Provider.hpp"
+#include "./include/Provider.hpp"
+#include "./include/BGP.hpp"
 
 // Commands
 const string TOPLGY = "topology";
-const string BGP = "bgp";
+const string BGP_CMD = "bgp";
 const string END = "end";
 
 // Default Messages
@@ -21,10 +25,13 @@ Kasra HajHeidari: 810199400\n";
 const string DESGNT_TOP = "Error! Topology has already been define\n";
 const string OK = "OK\n";
 const string CMD_ERR = "Error! Enter your command correctly\n";
+const string ENTER_CMD = "Please Enter your command\n";
 
 int main()
 {
+    cout << ENTER_CMD;
     Graph* graph = nullptr;
+    BGP* bgp = nullptr;
     vector<string> topology;
     while(1)
     {
@@ -48,11 +55,10 @@ int main()
                 continue;
             }
         }
-        else if(input[0] == BGP && input.size() == 1)
+        else if(input[0] == BGP_CMD && input.size() == 1)
         {
-            std::cout << 
-                "bgp needs to be \
-                implemented" << std::endl;
+            bgp = new BGP();
+            bgp->runBGP();
         }
         else if(input[0] == END && input.size() == 1)
         {

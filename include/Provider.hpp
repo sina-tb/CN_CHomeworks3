@@ -4,19 +4,25 @@
 #include <vector>
 #include <string>
 
-#include "Customer.hpp"
+class Customer;
 
+#include "Customer.hpp"
 
 using namespace std;
 
-class Provider : public Customer
+// a provider can have providers
+// also customer of a provider can be a provider
+class Provider : public Customer 
 {
 private:
+
     vector<Customer*> _customers;
     vector<Provider*> _peers;
 
 public:
+
     Provider();
+    Provider(string id);
     Provider(Provider* provider, string id);
     ~Provider();
 
