@@ -163,7 +163,7 @@ void Graph::delete_edge(int node1, int node2)
     if(index1 != nullptr && index2 != nullptr)
     {
         for(auto iedge = index1->_edges.begin();
-            iedge != index2->_edges.end();
+            iedge != index1->_edges.end();
             /*NOTHING*/)
         {
             if((*iedge)->_node2 == node2)
@@ -178,15 +178,19 @@ void Graph::delete_edge(int node1, int node2)
             iedge != index2->_edges.end();
             /*NOTHING*/)
         {
-            if((*iedge)->_node2 == node2)
+            if((*iedge)->_node2 == node1)
             {
-                index1->_edges.erase(iedge);
+                index2->_edges.erase(iedge);
                 break;
             }
             ++iedge;
         }
+        cout << "OK" << endl;
     }
-    cout << "this edge doesn't exist" << endl;
+    else{
+        cout << "this edge doesn't exist" << endl;
+    }
+    
 }
 
 void Graph::modify_edge(int node1, int node2, int weight)
@@ -209,7 +213,7 @@ void Graph::modify_edge(int node1, int node2, int weight)
 
         for(Edge* iedge : index2->_edges)
         {
-            if(iedge->_node1 == node1)
+            if(iedge->_node2 == node1)
             {
                 iedge->_weight = weight;
                 edge2 = true;
@@ -221,10 +225,11 @@ void Graph::modify_edge(int node1, int node2, int weight)
             index1->addEdge(node1, node2, weight);
             index2->addEdge(node2, node1, weight);
         }
-        else
-        {
-            cout << "something is wrong" << endl;
-        }
+        cout << "OK" << endl;
+    }
+    else
+    {
+        cout << "These Nodes Don't Exist" << endl;
     }
     
 }
@@ -257,7 +262,6 @@ void Graph::distance_vector(int source)
     auto start = std::chrono::steady_clock::now(); 
 
     int n = _nodes.size();
-    vector<bool> mark(n + 1, false);
     vector<int> dist(n + 1, INF);
     vector<int> par(n + 1, -1);
 
