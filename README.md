@@ -26,6 +26,10 @@ The code consists of three classes:
   
   ![Screenshot from 2023-06-05 11-12-39](https://github.com/sina-tb/CN_CHomeworks3/assets/88041997/78d5793b-4dd7-4bb4-8c3f-48aa18d2a3d5)
   
+  * **Customer**: this class is the base of inheritance for the `Provider` class (so a `Provider` can be a `Customer` as well).
+  * _prvoiders: indicates the providers for this customer
+  ![image](https://github.com/sina-tb/CN_CHomeworks3/assets/98649020/70b48461-065a-4058-b86d-640d647e8112)
+
   
  ## Code Verification
  ### Topology
