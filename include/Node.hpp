@@ -11,9 +11,15 @@ class Node
 public:
 
     int _id;
-    std::vector<Edge> _edges;
+    std::vector<Edge*> _edges;
+    
+    Node(int d, std::vector<Edge*> ed);
+    Node(int id);
+    ~Node();
 
-    Node(int d, std::vector<Edge> ed);
+    void printEdges(const std::vector<Node*> nodes);
+    Node addEdge(int node1, int node2, int weight);
+    Edge* getConEdge(const Node* checkNode);
 };
 
 #endif
