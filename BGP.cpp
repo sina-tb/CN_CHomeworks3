@@ -31,6 +31,10 @@ const string PRV_EXIST_ERR = "Error! A Provider by this ID Already exists!\n";
 const string CUS_EXIST_ERR = "Error! A Customer by this ID Already exists!\n";
 const string NO_PRV_ERR = "Error! Provider by this ID does not exist\n";
 const string NO_ID_ERR = "Error! no AS by this ID exist!\n";
+const string NO_ROUTE = "Error! advertising route is not in the advertiser(Provider)\n";
+const string NO_RLT = "Error! two unrelated AS can not advertise to each other\n";
+const string HIJACK = "Error! traffic has been Hijacked!\n";
+const string ILLEGAL_LEN = "Error! Lenght provided for this path is not correct\n";
 
 // Help/Guide
 const string HLP = "Hint:\n";
@@ -50,6 +54,11 @@ Provider2: <Second Provider's ASID> and then press enter\n\
 Length: <Length of connection> and then press enter\n\
 Preference: <Connection Priority> (higher better)\n";
 const string HLP_SHW_PER = HLP + "<Provider's ASID> and then press enter\n";
+const string HLP_ADVRT = HLP + 
+"Provider: <Advertising Provider's ASID>\n\
+Destination: <Advertisemnet Receiver Provider's>\n\
+Route: <Advertising route ASID>\n\
+Length: <Path Length>\n"; // technically prefix
 
 // Successful
 const string SUC_ADD_PRV = "Provider has been added successfully!\n";
@@ -63,7 +72,7 @@ enum MNU_OPT
     ADD_CUSTOMER = 2,        // input is incorrect
     CUST_TO_PRV = 3,
     ADD_PEER = 4,
-    ADV = 5,
+    ADVRT = 5,
     SHW_PRV = 6,
     SHW_CUS = 7,
     SHW_SUB = 8,
@@ -115,9 +124,9 @@ void BGP::handleInput(string input)
     {
         bgpAddPeer();
     }
-    else if(input == to_string(ADV))
+    else if(input == to_string(ADVRT))
     {
-        // Advertise suggesting routing table
+        bgpAdvertise();
     }
     else if(input == to_string(SHW_PRV))
     {
@@ -387,4 +396,59 @@ void BGP::bgpPrintPeers()
     {
         prv->printPeers();
     }
+}
+
+void BGP::bgpAdvertise()
+{
+    cout << HLP_ADVRT;
+    cout << "Provider: ";
+    string adPrv, dstPrv, rtCustomer;
+    std::getline(std::cin, adPrv);
+    Provider* prv = getProviderByID(adPrv);
+    if(prv == nullptr)
+    {
+        cout << NO_PRV_ERR;
+        return;
+    }
+    cout << "Destination: ";
+    std::getline(std::cin, dstPrv);
+    Provider* dst = getProviderByID(dstPrv);
+    if(dst == nullptr)
+    {
+        cout << NO_PRV_ERR;
+        return;
+    }
+    if(!dst->isRelated(prv))
+    {
+        cout << NO_RLT;
+        return;
+    }
+    cout << "Route: ";
+    std::getline(std::cin, rtCustomer);
+    Customer* rt = getPotentialCustomerByID(rtCustomer);
+    if(rt == nullptr)
+    {
+        cout << NO_ID_ERR;
+        return;
+    }
+    if(!prv->isRouteInProvider(rt->getASID()))
+    {
+        cout << NO_ROUTE;
+        return;
+    }
+    if(!dst->checkRouteSource(rt->getASID(), prv->getASID()))
+    {
+        cout << HIJACK;
+        return;
+    }
+    
+    cout << "Length: ";
+    string pathLength;
+    std::getline(std::cin, pathLength);
+    if(!dst->checkAdvertisedLenght(rt->getASID(), pathLength))
+    {
+        cout << ILLEGAL_LEN;
+        return;
+    }
+    dst->addToRoutingTable(prv->getASID(), rt->getASID(), pathLength);
 }

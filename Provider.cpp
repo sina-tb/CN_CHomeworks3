@@ -137,3 +137,103 @@ void Provider::addPeerLenghtPref(Provider* prv,
     }
  
 }
+
+bool Provider::isRouteInProvider(string routeASID)
+{
+    if(_cstmLengthPref.count(routeASID) <= 0
+        && _routeTable.count(routeASID) <= 0)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool Provider::isRelated(Provider* prv)
+{
+    for(Provider* p : _peers)
+    {
+        if(prv->ASID == p->ASID)
+        {
+            return true;
+        }
+    }
+
+    for(Customer* c : _customers)
+    {
+        if(c->getASID() == prv->ASID)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Provider::checkRouteSource(string routeASID,
+    string sourceASID)
+{
+    // announcing route is not even in routeTable 
+    if(!isRouteInProvider(routeASID)) 
+    {
+        return true;
+    }
+    else
+    {
+        if(_routeTable.count(routeASID) > 0)
+        {
+            if(_routeTable[routeASID].first != sourceASID)
+            {
+                return false;
+            }
+        }
+        // route is actually a customer
+        if(_cstmLengthPref.count(routeASID) > 0) 
+        {
+            if(routeASID != sourceASID)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+bool Provider::checkAdvertisedLenght(string route, string length)
+{
+    if(_cstmLengthPref.count(route) > 0)
+    {
+        if(to_string(_cstmLengthPref[route].first) == length)
+        {
+            return true;
+        }
+        return false;
+    }
+    else if(_routeTable.count(route) > 0)
+    {
+        if(to_string(_routeTable[route].second) == length)
+        {
+            return true;
+        }
+        return false;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Provider::addToRoutingTable(string src
+    , string route, string length)
+{
+    int len;
+    try
+    {
+        len = stoi(length);
+    }
+    catch(...)
+    {
+        cout << "Length must be an Integer literal\n";
+        return;
+    }
+    _routeTable[route] = 
+        pair<string, int>(src, len);
+}

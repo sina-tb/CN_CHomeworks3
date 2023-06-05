@@ -21,7 +21,8 @@ private:
     vector<Provider*> _peers;
     std::map<string, pair<int, int> > _cstmLengthPref; 
     std::map<string, pair<int, int> > _peerLengthPref;
-
+    std::map<string, pair<string, int> > _routeTable;
+    //       route,       source, length
 public:
 
     Provider();
@@ -38,7 +39,11 @@ public:
     void addPeerLenghtPref(Provider* prv,
         string length, string pref);
     Provider* addPeer(Provider* peerPrv);
-
+    bool isRouteInProvider(string routeASID);
+    bool isRelated(Provider* prv);
+    bool checkRouteSource(string routeASID, string sourceASID);
+    bool checkAdvertisedLenght(string route, string length);
+    void addToRoutingTable(string src, string route, string length);
 };
 
 #endif

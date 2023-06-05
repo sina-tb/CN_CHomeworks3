@@ -31,6 +31,7 @@ public:
     void bgpPrintCustomerProviders();
     void bgpAddPeer();
     void bgpPrintPeers();
+    void bgpAdvertise();
     bool isNewIDAddable(string prID);
     Customer* getCustomerByID(string csID);
     Provider* getProviderByID(string prID);
