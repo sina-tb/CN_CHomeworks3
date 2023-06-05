@@ -290,10 +290,16 @@ void Graph::link_state(int source)
         {
             bool flag = false;
             for(int j = 0; j < M.size(); j++)
+            {
                 if(i == M[j]) 
+                {
                     flag = true;
+                }
+            }
             if(flag)
+            {
                 continue;
+            }
             if(C[i] < min_cost)
             {
                 min_cost = C[i];
@@ -306,7 +312,9 @@ void Graph::link_state(int source)
         {
             int col = 4 - getDigitCount(node->_id);
             for (int i = 0; i < col; i++)
+            {
                 cout << " ";
+            }
             cout << node->_id << "|";
         }
         cout << endl;
@@ -318,7 +326,9 @@ void Graph::link_state(int source)
             if (C[ind] == INF)
                 col = 2;
             for (int i = 0; i < col; i++)
+            {
                 cout << " ";
+            }
             cout << (C[ind] == INF ? -1 : C[ind]) << "|";
         }
         cout << endl;
@@ -332,8 +342,12 @@ void Graph::link_state(int source)
         {
             bool flag = false; 
             for(int j = 0; j < M.size(); j++)
+            {
                 if(i == M[j]) 
+                {
                     flag = true;
+                }
+            }
             if(flag)
                 continue;
             
@@ -344,8 +358,8 @@ void Graph::link_state(int source)
                     if(edge->_node2 != i)
                         continue;
                 }
-                else 
-                {
+                else
+                { 
                     if(edge->_node1 != i)
                         continue;
                 }
