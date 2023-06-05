@@ -257,6 +257,141 @@ int getDigitCount(int x)
     return res;
 }
 
+
+void Graph::link_state(int source)
+{   
+    auto start = std::chrono::steady_clock::now();
+    int n = _nodes.size();
+    vector<int> M;
+    vector<int> C(n + 1,INF);
+    vector<int> par(n + 1, -1);
+    M.push_back(source);
+    for(auto edge : get_node(source)->_edges)
+    {
+        if(edge->_node1 == source)
+        {
+            C[edge->_node2] = edge->_weight;
+            par[edge->_node2] = source;
+        }
+        else
+        { 
+            C[edge->_node1] = edge->_weight;
+            par[edge->_node1] = source;
+        }
+    }
+    C[source] = 0;
+
+    int iteration = 1;
+    while (M.size() != n)
+    {
+        int min_cost = INF;
+        int index = -1;
+        for(int i = 1; i < n + 1 ; i++)
+        {
+            bool flag = false;
+            for(int j = 0; j < M.size(); j++)
+                if(i == M[j]) 
+                    flag = true;
+            if(flag)
+                continue;
+            if(C[i] < min_cost)
+            {
+                min_cost = C[i];
+                index = i;
+            }
+        }
+        cout << "   |Iter " + to_string(iteration) << ":" << endl;
+        cout << "Dest|";
+        for (auto node: _nodes)
+        {
+            int col = 4 - getDigitCount(node->_id);
+            for (int i = 0; i < col; i++)
+                cout << " ";
+            cout << node->_id << "|";
+        }
+        cout << endl;
+        cout << "Cost|";
+        for (auto node: _nodes)
+        {
+            int ind = node->_id;
+            int col = 4 - getDigitCount(C[ind]);
+            if (C[ind] == INF)
+                col = 2;
+            for (int i = 0; i < col; i++)
+                cout << " ";
+            cout << (C[ind] == INF ? -1 : C[ind]) << "|";
+        }
+        cout << endl;
+        for (int i = 0; i < (_nodes.size() + 1) * 5; i++)
+            cout << "-";
+        cout << endl;
+        M.push_back(index);
+        iteration++;
+
+        for(int i = 1; i < n + 1 ; i++)
+        {
+            bool flag = false; 
+            for(int j = 0; j < M.size(); j++)
+                if(i == M[j]) 
+                    flag = true;
+            if(flag)
+                continue;
+            
+            for(auto edge : get_node(index)->_edges)
+            {   
+                if(edge->_node1 == index)
+                {
+                    if(edge->_node2 != i)
+                        continue;
+                }
+                else 
+                {
+                    if(edge->_node1 != i)
+                        continue;
+                }
+                
+                if(C[index] + edge->_weight < C[i])
+                {
+                    C[i] = C[index] + edge->_weight;
+                    par[i] = index;
+                }
+
+            }
+        }
+    }
+    
+    string path;
+    cout<<"\nPath: [s] -> [d]         Min-Cost         Shortest Path"<<endl;
+    cout<<"---------------------------------------------------------"<<endl;
+    for (auto node: _nodes)
+    {
+        int ind = node->_id;
+        path="";
+        if (ind == source)
+            continue;
+        cout << "    [" << source << "] -> [" << ind << "]";
+        int col = 15 - getDigitCount(ind);
+        for (int i = 0; i < col; i++)
+            cout << " ";
+        cout<<C[ind];
+        col= 15 - getDigitCount(C[ind]);
+        for (int i = 0; i < col; i++)
+                cout << " ";
+        int p = ind;
+        while (par[p] != -1)
+        {   
+            path=" -> "+to_string(p)+path;
+            p = par[p];
+        }
+        cout << to_string(source) << path << endl;
+    }
+     
+    auto finish = std::chrono::steady_clock::now();
+    double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start).count();
+    cout << "Elapsed: " << elapsed_seconds << endl;
+    return;
+}
+
 void Graph::distance_vector(int source)
 {
     auto start = std::chrono::steady_clock::now(); 

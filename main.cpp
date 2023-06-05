@@ -20,7 +20,15 @@ void command_handler(Graph* graph){
         getline(command_stream,command,COMMAND_DELIM);
         getline(command_stream,args);
         if(command=="lsrp"){
-
+            cout << args << endl;
+            if (args.size()  == 0){
+                for ( int i = 0; i < graph->_nodes.size(); i++)
+                    graph->link_state(graph->_nodes[i]->_id);
+            }
+            else{
+                arg_list=splitByDelim(args,'-');
+                graph->link_state(stoi(args));
+            }
         }
         else if(command=="dvrp"){
             cout << args << endl;

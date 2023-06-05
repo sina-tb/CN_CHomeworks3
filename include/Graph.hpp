@@ -31,6 +31,7 @@ public:
     void modify_edge(int node1, int node2, int weight);
     Node* get_node(int id);
     void distance_vector(int source);
+    void link_state(int source);
 };
 
 vector<string> splitByDelim(string text, char delimeter);
