@@ -90,16 +90,16 @@ int main()
     while(1)
     {
         cout << MAIN_MENU;
-        int main_inp;
-        cin >> main_inp;
-        if(main_inp == 1)
+        string main_inp;
+        std::getline(std::cin, main_inp);
+        if(main_inp == "1")
         {
             vector<string> topology = Graph::extract_topology();
             Graph graph(topology);
             cout << "Enter Your Command: "<<endl;
             command_handler(&graph);
         }
-        else if(main_inp == 2)
+        else if(main_inp == "2")
         {
             cout << ENTER_CMD;
             BGP* bgp = nullptr;
