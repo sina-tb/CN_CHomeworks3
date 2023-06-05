@@ -35,5 +35,6 @@ public:
 };
 
 vector<string> splitByDelim(string text, char delimeter);
+vector<string> getInput();
 
 #endif

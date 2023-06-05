@@ -6,6 +6,10 @@
 #include <sstream>
 #include <vector>
 
+#include "./include/Provider.hpp"
+#include "./include/Provider.hpp"
+#include "./include/BGP.hpp"
+
 #define COMMAND_DELIM ' '
 
 void command_handler(Graph* graph){
@@ -60,11 +64,62 @@ void command_handler(Graph* graph){
     }
 }
 
+// Commands
+const string TOPLGY = "topology";
+const string BGP_CMD = "bgp";
+const string END = "end";
+
+// Default Messages
+const string END_MSG = 
+"Thank you for using our Application\n\
+Presented by:\n\
+Sina Tabasi: 810199554\n\
+Behrad Elmi: 810199557\n\
+Kasra HajHeidari: 810199400\n";
+
+const string DESGNT_TOP = "Error! Topology has already been define\n";
+const string OK = "OK\n";
+const string CMD_ERR = "Error! Enter your command correctly\n";
+const string ENTER_CMD = "Please Enter your command\n";
+const string MAIN_MENU = "Choose one of the following options:\n\
+1) Using topology command (and the two algorithms associated with it)\n\
+2) Using bgp command (for bgp simulation)\n";
+
 int main()
 {
-    vector<string> topology = Graph::extract_topology();
-    Graph graph(topology);
-    cout << "Enter Your Command: "<<endl;
-    command_handler(&graph);
+    while(1)
+    {
+        cout << MAIN_MENU;
+        int main_inp;
+        cin >> main_inp;
+        if(main_inp == 1)
+        {
+            vector<string> topology = Graph::extract_topology();
+            Graph graph(topology);
+            cout << "Enter Your Command: "<<endl;
+            command_handler(&graph);
+        }
+        else if(main_inp == 2)
+        {
+            cout << ENTER_CMD;
+            BGP* bgp = nullptr;
+            vector<string> input = getInput();
+            if(input[0] == BGP_CMD && input.size() == 1)
+            {
+                bgp = new BGP();
+                bgp->runBGP();
+            }
+            else if(input[0] == END && input.size() == 1)
+            {
+                std::cout << END_MSG;
+                return 0;
+            }
+            else
+            {
+                cout << CMD_ERR;
+                continue;
+            }
+        }
+    }
     return 0;
 }

@@ -31,6 +31,15 @@ vector<string> splitByDelim(string text, char delimiter)
     return words;
 }
 
+vector<string> getInput()
+{
+    vector<string> input;
+    string inputStr;
+    std::getline(std::cin, inputStr);
+    input = splitByDelim(inputStr, IN_DEL);
+    return input;
+}
+
 bool Graph::tp_format_checker(const vector<string> tp_form)
 {
     if(tp_form.size() != 3)
